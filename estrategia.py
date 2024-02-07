@@ -100,20 +100,21 @@ def jogo():
             elif inimigo_atual["Vida"] <= 0:
                 print("Muito bem voce venceu o monstro!")
                 personagem["Exp"] += inimigo_atual["Exp"]
+                print(f"Nome: {personagem['Nome']}\nVida: {personagem['Vida']}\nExp: {personagem['Exp']}\nLevel: {personagem['Level']}")
 
-    print(f"Nome: {personagem['Nome']}\nVida: {personagem['Vida']}\nExp: {personagem['Exp']}\nLevel: {personagem['Level']}")
-    print("________________________")
-    print("Qual ação deseja tomar:\n1 - Ir a Batalha\n2 - Sair do Jogo")
-    resposta = input()
+        print(f"Nome: {personagem['Nome']}\nVida: {personagem['Vida']}\nExp: {personagem['Exp']}\nLevel: {personagem['Level']}")
+        print("________________________")
+        print("Qual ação deseja tomar:\n1 - Ir a Batalha\n2 - Sair do Jogo")
+        resposta = input()
 
-    if resposta == "2":
-        print("Salvando jogo!")
-        with open("personagem.json", "w") as arq:
-            json.dump(personagem, arq, indent=3)
-        
-        time.sleep(2)
-        print("Jogo salvo!")
-        quit()
+        if resposta == "2":
+            print("Salvando jogo!")
+            with open("personagem.json", "w") as arq:
+                json.dump(personagem, arq, indent=3)
+            
+            time.sleep(2)
+            print("Jogo salvo!")
+            quit()
 
 
 
