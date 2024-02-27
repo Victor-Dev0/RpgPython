@@ -1,0 +1,6 @@
+[
+    {"Nome": "Duende", "Vida": 50, "Dano": 5, "Exp": 10},
+    {"Nome": "Orc", "Vida": 70, "Dano": 10, "Exp": 20},
+    {"Nome": "Mini-Chefe", "Vida": 100, "Dano": 15, "Exp": 30},
+    {"Nome": "Chefão", "Vida": 200, "Dano": 30, "Exp": 40}
+]
