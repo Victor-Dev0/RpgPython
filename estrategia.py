@@ -2,7 +2,7 @@ import os
 import random
 import json
 import time
-import interface
+import auxiliar
 from models import Personagem
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -15,51 +15,68 @@ session = Session()
 
 
 #Verificando se ja tem algum heroi salvo
-with open("personagem.json", "r") as arq_personagem:
-    personagem = json.load(arq_personagem)
+# def procura_heroi():
+#     with open("personagem.json", "r") as arq_personagem:
+#         personagem = json.load(arq_personagem)
 
+#     if personagem["Nome"] == "":
+#         nome = interface.sg.popup_get_text("Escolha o nome do seu heroi: ", "Salvar")
+#         personagem["Nome"] = nome
+#         novo_personagem = Personagem(Nome=personagem["Nome"], VidaMaxima=personagem["VidaMaxima"], Vida=personagem["Vida"], Dano=personagem["Dano"], Exp=personagem["Exp"], ExpMaxima=personagem["ExpMaxima"], Nivel=personagem["Nivel"])
 
-if personagem["Nome"] == "":
-    nome = interface.sg.popup_get_text("Escolha o nome do seu herói: ", "Salvar")
-    personagem["Nome"] = nome
-    novo_personagem = Personagem(Nome=personagem["Nome"], VidaMaxima=personagem["VidaMaxima"], Vida=personagem["Vida"], Dano=personagem["Dano"], Exp=personagem["Exp"], ExpMaxima=personagem["ExpMaxima"], Nivel=personagem["Nivel"])
+#         session.add(novo_personagem)
+#         session.commit()
 
-    session.add(novo_personagem)
-    session.commit()
-
-with open("personagem.json", "w") as arq:
-    json.dump(personagem, arq, indent=3)
+#     with open("personagem.json", "w") as arq:
+#         json.dump(personagem, arq, indent=3)
 
 #Definindo os inimigos
-with open("inimigos.json", "r") as arq_inimigos:
-    npcs = json.load(arq_inimigos)
+# def defini_inimigos():
+#     with open("inimigos.json", "r") as arq_inimigos:
+#         npcs = json.load(arq_inimigos)
+
+#     return npcs
 
 #funçao para aumentar o nivel do jogador
-def subir_nivel(personagem):
-    novo_personagem = personagem
-    novo_personagem["Nivel"] += 1
-    novo_personagem["Exp"] = 0
-    novo_personagem["ExpMaxima"] = novo_personagem["ExpMaxima"] * novo_personagem["Nivel"]
-    novo_personagem["VidaMaxima"] += 10
-    novo_personagem["Dano"] += 5
-    return novo_personagem
+# def subir_nivel(personagem):
+#     personagem_atual = session.query(Personagem).first()
 
-#funçao para salvar alteraçao do personagem
-def salvar_situacao(personagem):
-    with open('personagem.json', 'w') as arq_salvar:
-        json.dump(personagem, arq_salvar, indent=3)
+#     novo_personagem = personagem
+#     novo_personagem["Nivel"] += 1
+#     personagem_atual.Nivel = novo_personagem["Nivel"]
 
-#funçao para quando o personagem morrer
-def resetar_personagem(personagem):
-    with open('personagem.json', 'w') as arq_reset:
-        personagem['Nome'] = ""
-        personagem["VidaMaxima"] = 100
-        personagem["Vida"] = 100
-        personagem["Dano"] = 15
-        personagem["Exp"] = 0
-        personagem["ExpMaxima"] = 100
-        personagem["Nivel"] = 1
-        json.dump(personagem, arq_reset, indent=3)
+#     novo_personagem["Exp"] = 0
+#     personagem_atual.Exp = novo_personagem["Exp"]
+
+#     novo_personagem["ExpMaxima"] = novo_personagem["ExpMaxima"] * novo_personagem["Nivel"]
+#     personagem_atual.ExpMaxima = novo_personagem["ExpMaxima"]
+
+#     novo_personagem["VidaMaxima"] += 10
+#     personagem_atual.VidaMaxima = novo_personagem["VidaMaxima"]
+
+#     novo_personagem["Dano"] += 5
+#     personagem_atual.Dano = novo_personagem["Dano"]
+
+#     session.add(personagem_atual)
+#     session.commit()
+#     return personagem_atual
+
+# #funçao para salvar alteraçao do personagem
+# def salvar_situacao(personagem):
+#     with open('personagem.json', 'w') as arq_salvar:
+#         json.dump(personagem, arq_salvar, indent=3)
+
+# #funçao para quando o personagem morrer
+# def resetar_personagem(personagem):
+#     with open('personagem.json', 'w') as arq_reset:
+#         personagem['Nome'] = ""
+#         personagem["VidaMaxima"] = 100
+#         personagem["Vida"] = 100
+#         personagem["Dano"] = 15
+#         personagem["Exp"] = 0
+#         personagem["ExpMaxima"] = 100
+#         personagem["Nivel"] = 1
+#         json.dump(personagem, arq_reset, indent=3)
 
 
 #funçao principal
@@ -74,7 +91,7 @@ def jogo(personagem):
     # if resposta == "2":
     #     quit()
 
-    
+    npcs = auxiliar.defini_inimigos()
     #escolha aleatoria de qual inimigo vai aperecer para a batalha
     inimigo = random.randint(0, 3)
     #pegando os dados do inimigo aleatorio
@@ -94,9 +111,9 @@ def jogo(personagem):
         if turno == 1:
             interface.window['1 - Ir a Batalha'].update('1 - Ataque Fisico')
             interface.window['2 - Sair do jogo'].update('2 - Fugir')
-            print("Turno do jogador!")
-            print("O que deseja fazer?\n1 - Ataque Fisico\n2 - Fugir")
-            resposta = input()
+            # print("Turno do jogador!")
+            # print("O que deseja fazer?\n1 - Ataque Fisico\n2 - Fugir")
+            # resposta = input()
 
             #jogador escolheu fugir
             if resposta == "2":
@@ -109,19 +126,19 @@ def jogo(personagem):
                     if ataque == 5:
                         print("Sofreu dano critico")
                         personagem["Vida"] -= inimigo_atual["Dano"] * 2
-                        salvar_situacao(personagem)
+                        auxiliar.salvar_situacao(personagem)
                         print(f"Dano sofrido: {inimigo_atual['Dano']*2}")
                         turno = 2
                     elif ataque == 3:
                         personagem["Vida"] -= inimigo_atual["Dano"]
-                        salvar_situacao(personagem)
+                        auxiliar.salvar_situacao(personagem)
                         print(f"Dano sofrido: {inimigo_atual['Dano']}")
                         turno = 2
 
                 elif fulga > 10 and fulga <= 25:
                     print("Fulga bem sucedida porem tomou um dano!")
                     personagem["Vida"] -= inimigo_atual["Dano"] - 5
-                    salvar_situacao(personagem)
+                    auxiliar.salvar_situacao(personagem)
                     print(f"Dano sofrido: {inimigo_atual['Dano'] - 5}")
                     break
 
@@ -148,13 +165,13 @@ def jogo(personagem):
                 print("O monstro decidiu atacar!")
                 time.sleep(1)
                 personagem["Vida"] -= inimigo_atual["Dano"]
-                salvar_situacao(personagem)
+                auxiliar.salvar_situacao(personagem)
                 turno = 1
             elif acao_monstro > 20 and acao_monstro <= 28:
                 print("O monstro está com sorte!! Ai vai um ataque critico!")
                 time.sleep(1)
                 personagem["Vida"] -= inimigo_atual["Dano"] * 2
-                salvar_situacao(personagem)
+                auxiliar.salvar_situacao(personagem)
                 turno = 1
             elif acao_monstro == 29:
                 print("O monstro fugiu!")
@@ -165,7 +182,7 @@ def jogo(personagem):
             personagem["Vida"] = 0
             print("O monstro venceu a batalha!")
             print("Fim de jogo..")
-            resetar_personagem(personagem)
+            auxiliar.resetar_personagem(personagem)
             quit()
         elif inimigo_atual["Vida"] <= 0:
             print("Muito bem voce venceu o monstro!")
@@ -179,7 +196,7 @@ def jogo(personagem):
             if personagem["Exp"] >= personagem["ExpMaxima"]:
                 personagem["Exp"] = personagem["ExpMaxima"]
                 print("Parabens voce subiu de nivel!!")
-                personagem = subir_nivel(personagem)
+                personagem = auxiliar.subir_nivel(personagem)
                 time.sleep(0.5)
         
 
